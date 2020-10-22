@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[packages]
+django = "*"
+djangorestframework = "*"
+django-anymail = "*"
+django-cors-headers = "*"
+django-extensions = "*"
+django-filter = "*"
+django-heroku = "*"
+django-rest-swagger = "*"
+drf-yasg = "*"
+psycopg2 = "*"
+pyjwt = "*"
+
+gunicorn = "*"
+pillow = "*"
+whitenoise = "*"
+
+[requires]
+python_version = "3.8.5"
