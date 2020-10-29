@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 import django_heroku
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,7 +47,8 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     'rest_framework',
-    'rest_framework.authtoken',
+    #'rest_framework_jwt',
+    #'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'drf_yasg',
 ]
@@ -56,6 +58,7 @@ LOCAL_APPS = [
     'users',
     'utils',
 ]
+
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
@@ -112,17 +115,7 @@ DATABASES = {
     }
 }
 
-# SWAGGER
-SWAGGER_SETTINGS = {
-    'SECURITY_DEFINITIONS': {
-        "Auth Token eg [Bearer JWT) ]": {
-            "type": "apiKey",
-            "name": "Autorization",
-            "in": "header"
-        }
-    },
-    'USE_SESSION_AUTH': True
-}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -147,8 +140,32 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 25,
     'DEFAULT_AUTHENTICATION_CLASSES': (
+    #    'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    #    'rest_framework.authentication.TokenAuthentication',
+    #    'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+    #    'rest_framework.permissions.IsAdminUser',
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
     )
+}
+
+# SWAGGER
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        "api_key [Bearer simpleJWT]": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    'USE_SESSION_AUTH': True
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=50),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 # Internationalization

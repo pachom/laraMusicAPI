@@ -21,6 +21,9 @@ from users.models import User, Profile
 from users.serializers.profiles import ProfileModelSerializer
 
 # Utilities
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.tokens import RefreshToken
 import jwt
 from datetime import timedelta
 
@@ -34,10 +37,12 @@ class UserModelSerializer(serializers.ModelSerializer):
 
         model = User
         fields = (
+            'id',
             'username',
             'first_name',
             'last_name',
             'email',
+            'is_staff',
             'profile'
         )
 
@@ -81,20 +86,8 @@ class UserSignUpSerializer(serializers.Serializer):
         data.pop('password_confirmation')
         user = User.objects.create_user(**data, is_verified=True, is_client=True)
         Profile.objects.create(user=user)
-        verification_token = self.gen_verification_token(data['username'])
-        return user, verification_token
+        return user
     
-    def gen_verification_token(self, user):
-        "Create jwt token that the user can use to verify ists account"
-        exp_date = timezone.now() + timedelta(days=7)
-        payload = {
-            'username': user,
-            'exp': int(exp_date.timestamp()),
-            'type': 'signup_confirmation'
-        }
-        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
-        return token.decode()
-
 
 class UserLoginSerializer(serializers.Serializer):
     """User login serializer.
@@ -117,19 +110,38 @@ class UserLoginSerializer(serializers.Serializer):
 
     def create(self, data):
         """Generate or retrieve new token."""
-        token, created = Token.objects.get_or_create(user=self.context['user'])
-        return self.context['user'], token.key
+        verification_token = self.gen_verification_token(user=self.context['user'])
+        return self.context['user'], verification_token
 
-    def gen_verification_token(self, user):
-        "Create jwt token that the user can use to verify ists account"
-        exp_date = timezone.now() + timedelta(days=7)
+    def gen_verification_token(self,user):
+        "Create simpleJWT token that the user can use to verify its account"
+        refresh = RefreshToken.for_user(user)
+
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
+
+
+"""   @classmethod
+    def gen_verification_token(cls, user):
+        
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['name'] = user.name
+        return token 
+
+        exp_date = timezone.now() + timedelta(days=1)
         payload = {
-            'user': user.username,
+            'id': user.id,
             'exp': int(exp_date.timestamp()),
-            'type': 'login_confirmation'
+            'token_type': 'access'
         }
         token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+        print('token: {}',format(token))
         return token.decode()
+"""
 
 class AccountVerificationSerializer(serializers.Serializer):
     """Account verification serializer."""

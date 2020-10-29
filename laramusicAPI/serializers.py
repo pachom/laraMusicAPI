@@ -1,18 +1,87 @@
-#from django.contrib.auth.models import User
-from users.models import User
+"""Lara music serializers."""
+
+# Django Rest Framework
 from rest_framework import serializers
 
-from laramusicAPI.models import Profile
+# Models
+from laramusicAPI.models import (Artist, Album,
+    MusicTrack, TypeList,
+    MusicList, TrackInList,
+    History
+)
 
 
-"""class UserSerializer(serializers.HyperlinkedModelSerializer):
+class ArtistSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['url', 'username', 'email', 'groups']
+        model = Artist
+        fields = [
+            'id',
+            'name',
+            'fuente',
+            'fuente_id',
+            'fuente_uri',
+            'fuente_img',
+        ]
 
 
-class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+class MusicTrackSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Profile
-        fields = ['user', 'bio', 'location', 'birth_date', 'days']
-"""
+        model = MusicTrack
+        fields = [
+            'id',
+            'order',
+            'title',
+            'uri',
+            'album',
+            'length',
+            'views',
+            'gender',
+            'song_year',
+            'record_company',
+            'likes',
+        ]
+
+
+class AlbumSerializer(serializers.ModelSerializer):
+    tracks = serializers.StringRelatedField(many=True)
+    
+    class Meta:
+        model = Album
+        fields = ['id', 'album_title', 'artist', 'album_year', 'album_length', 'tracks']
+
+
+class TypeListSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = TypeList
+        fields = ['name',]
+
+
+class MusicListSerializer(serializers.ModelSerializer):
+    musictracks = MusicTrackSerializer(many=True)
+
+    class Meta:
+        model = MusicList
+        fields = ['id', 'profile', 'title', 'type_list', 'musictracks']
+
+    def create(self, validated_data):
+        tracks_data = validated_data.pop('musictracks')
+        musiclist = MusicList.objects.create(**validated_data)
+        for track_data in tracks_data:
+            track = MusicTrack.objects.create(musiclist=musiclist, **track_data)
+            m1 = TrackInList(musiclist=musiclist, musictrack=track)
+            m1.save()
+        return musiclist
+
+
+class TrackInListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrackInList
+        fields = ['id', 'musiclist', 'musictrack', 'visits',]
+
+
+class HistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = History
+        fields = ['id', 'profile_id', 'musictrack', 'date_time',]
+        
