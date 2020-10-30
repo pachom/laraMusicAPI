@@ -14,7 +14,6 @@ from users.permissions import IsAccountOwner
 
 # Serializers
 from users.serializers.profiles import ProfileModelSerializer
-#from lara_api.users.serializers import CircleModelSerializer
 from users.serializers import (
     AccountVerificationSerializer,
     UserLoginSerializer,
@@ -40,7 +39,10 @@ class UserViewSet(mixins.RetrieveModelMixin,
     lookup_field = 'username'
 
     def get_permissions(self):
-        """Assign permissions based on action."""
+        """Assign permissions based on action.
+        
+        Mantain AllowAny with prove purpose 
+        """
         if self.action in ['signup', 'login', 'verify']:
             permissions = [AllowAny]
         elif self.action in ['retrieve', 'update', 'partial_update', 'profile']:
@@ -51,7 +53,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
 
     @action(detail=False, methods=['post'])
     def login(self, request):
-        """User sign in."""
+        """User log in."""
         serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user, token = serializer.save()
@@ -67,11 +69,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
         serializer = UserSignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user, profile = serializer.save()
-        data =  UserModelSerializer(user).data
-        """{
-            'user': UserModelSerializer(user).data,
-            'profile': ProfileModelSerializer(profile).data
-        }"""
+        data = UserModelSerializer(user).data
 
         return Response(data, status=status.HTTP_201_CREATED)
 
@@ -113,4 +111,4 @@ class UserViewSet(mixins.RetrieveModelMixin,
         }
         response.data = data
         return response
-"""
+    """

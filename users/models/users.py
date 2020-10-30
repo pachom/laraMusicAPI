@@ -2,8 +2,13 @@
 
 # Django
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
+
+# Models
+import users
 
 # Utilities
 from utils.models import Lara_apiModel
@@ -49,3 +54,4 @@ class User(Lara_apiModel, AbstractUser):
     def get_short_name(self):
         """Return username."""
         return self.username
+

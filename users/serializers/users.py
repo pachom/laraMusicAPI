@@ -43,7 +43,7 @@ class UserModelSerializer(serializers.ModelSerializer):
             'last_name',
             'email',
             'is_staff',
-            'profile'
+            'profile',
         )
 
 
@@ -52,7 +52,7 @@ class UserSignUpSerializer(serializers.Serializer):
 
     Handle sign up data validation and user/profile creation.
     """
-    profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    profile = ProfileModelSerializer()
 
     email = serializers.EmailField(
         validators=[UniqueValidator(queryset=User.objects.all())]
@@ -84,14 +84,13 @@ class UserSignUpSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         """Handle user and profile creation."""
-        #validated_data.pop('password_confirmation')
-        print(f'validated_data: { validated_data}')
-        users_data = validated_data.pop('password_confirmation')
-        
+        validated_data.pop('password_confirmation')
+        validated_profile = validated_data.pop('profile')
+
         user = User.objects.create_user(**validated_data, is_verified=True, is_client=True)
-        prof = Profile.objects.create(**profile)
-        return user, prof
-    
+        profil = Profile.objects.create(user=user, **validated_profile)
+        return user, profil
+
 
 class UserLoginSerializer(serializers.Serializer):
     """User login serializer.
@@ -126,26 +125,6 @@ class UserLoginSerializer(serializers.Serializer):
             'access': str(refresh.access_token),
         }
 
-
-"""   @classmethod
-    def gen_verification_token(cls, user):
-        
-        token = super().get_token(user)
-
-        # Add custom claims
-        token['name'] = user.name
-        return token 
-
-        exp_date = timezone.now() + timedelta(days=1)
-        payload = {
-            'id': user.id,
-            'exp': int(exp_date.timestamp()),
-            'token_type': 'access'
-        }
-        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
-        print('token: {}',format(token))
-        return token.decode()
-"""
 
 class AccountVerificationSerializer(serializers.Serializer):
     """Account verification serializer."""

@@ -40,3 +40,4 @@ class Profile(Lara_apiModel):
         """Return user's str representation."""
         return str(self.user)
 
+
