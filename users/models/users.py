@@ -23,7 +23,6 @@ class User(Lara_apiModel, AbstractUser):
             'unique': 'A user with that email already exists.'
         }
     )
-
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']

@@ -52,6 +52,7 @@ class UserSignUpSerializer(serializers.Serializer):
 
     Handle sign up data validation and user/profile creation.
     """
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
 
     email = serializers.EmailField(
         validators=[UniqueValidator(queryset=User.objects.all())]
@@ -81,12 +82,15 @@ class UserSignUpSerializer(serializers.Serializer):
         password_validation.validate_password(passwd)
         return data
 
-    def create(self, data):
+    def create(self, validated_data):
         """Handle user and profile creation."""
-        data.pop('password_confirmation')
-        user = User.objects.create_user(**data, is_verified=True, is_client=True)
-        Profile.objects.create(user=user)
-        return user
+        #validated_data.pop('password_confirmation')
+        print(f'validated_data: { validated_data}')
+        users_data = validated_data.pop('password_confirmation')
+        
+        user = User.objects.create_user(**validated_data, is_verified=True, is_client=True)
+        prof = Profile.objects.create(**profile)
+        return user, prof
     
 
 class UserLoginSerializer(serializers.Serializer):

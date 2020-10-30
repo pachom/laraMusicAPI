@@ -14,7 +14,11 @@ class Profile(Lara_apiModel):
     and statistics.
     """
 
-    user = models.OneToOneField('users.User', on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        'users.User',
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
 
     picture = models.ImageField(
         'profile picture',
