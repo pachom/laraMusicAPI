@@ -13,12 +13,13 @@ from rest_framework.permissions import (
 from users.permissions import IsAccountOwner
 
 # Serializers
-from users.serializers.profiles import ProfileModelSerializer
+from users.serializers.profiles import ProfileModelSerializer, MusicListInProfile
 from users.serializers import (
     AccountVerificationSerializer,
     UserLoginSerializer,
     UserModelSerializer,
-    UserSignUpSerializer
+    UserSignUpSerializer,
+    MusicListInProfileSerializer
 )
 
 # Models
@@ -70,7 +71,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
         serializer.is_valid(raise_exception=True)
         user, profile = serializer.save()
         data = UserModelSerializer(user).data
-
+        
         return Response(data, status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=['post'])
@@ -98,17 +99,10 @@ class UserViewSet(mixins.RetrieveModelMixin,
         data = UserModelSerializer(user).data
         return Response(data)
 
-    """def retrieve(self, request, *args, **kwargs):
-        Add extra data to the response.
-        response = super(UserViewSet, self).retrieve(request, *args, **kwargs)
-        circles = Circle.objects.filter(
-            members=request.user,
-            membership__is_active=True
-        )
-        data = {
-            'user': response.data,
-            'circles': CircleModelSerializer(circles, many=True).data
-        }
-        response.data = data
-        return response
-    """
+
+class MusicListInProfileViewSet(viewsets.ModelViewSet):
+    """API endpoint that allows tracksinlist to be viewed or edited."""
+    
+    permission_classes = (AllowAny,)
+    queryset = MusicListInProfile.objects.all()
+    serializer_class = MusicListInProfileSerializer

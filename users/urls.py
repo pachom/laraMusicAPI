@@ -11,6 +11,7 @@ from .views import users as user_views
 
 router = DefaultRouter()
 router.register(r'users', user_views.UserViewSet, basename='users')
+router.register(r'users/musiclistinprofile/', user_views.MusicListInProfileViewSet, basename='musiclistinprofile')
 
 urlpatterns = [
     path('', include(router.urls))

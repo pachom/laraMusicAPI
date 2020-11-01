@@ -6,8 +6,8 @@ from django.dispatch import receiver
 
 
 # Users
-from users.models import Profile
-
+#from users.models import Profile
+import users
 # Utils
 from utils.models import Lara_apiModel
 
@@ -49,16 +49,13 @@ class MusicTrack(Lara_apiModel, models.Model):
     key_of = models.CharField(max_length=20, blank=True)
     camelot = models.CharField(max_length=20, blank=True) 
 
-    class Meta:
-        unique_together = ['album', 'order']
-        ordering = ['order']
-
+    
     def __str__(self):
-        return '%d: %s' % (self.order, self.title)
+        return '%d: %s' % (self.id, self.title)
 
 
 class MusicList(Lara_apiModel, models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True)
+    #profile = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True)
     title = models.CharField(max_length=100, blank=True)
     type_list = models.CharField(max_length=50, blank=True)
     musictracks = models.ManyToManyField(MusicTrack, through='TrackInList')
@@ -77,7 +74,7 @@ class TypeList(Lara_apiModel, models.Model):
         ordering = ['name']
 
 class History(Lara_apiModel, models.Model):
-    profile_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    #profile_id = models.ForeignKey(users.models.Profile, on_delete=models.CASCADE)
     musictrack = models.ForeignKey(MusicTrack, on_delete=models.CASCADE, null=True)
     listened_uri = models.URLField(blank=True)
     date_time = models.DateTimeField(

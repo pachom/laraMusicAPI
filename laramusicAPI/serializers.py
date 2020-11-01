@@ -39,6 +39,8 @@ class MusicTrackSerializer(serializers.ModelSerializer):
             'song_year',
             'record_company',
             'likes',
+            'created',
+            'modified',
         ]
 
 
@@ -61,8 +63,12 @@ class MusicListSerializer(serializers.ModelSerializer):
     musictracks = MusicTrackSerializer(many=True)
 
     class Meta:
+        """Meta class."""
+
         model = MusicList
-        fields = ['id', 'profile', 'title', 'type_list', 'musictracks']
+        fields = ['id', 'title', 'type_list', 'created', 'modified', 'musictracks']
+        read_only_fields = ['created', 'modified']
+
 
     def create(self, validated_data):
         tracks_data = validated_data.pop('musictracks')
@@ -83,5 +89,5 @@ class TrackInListSerializer(serializers.ModelSerializer):
 class HistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = History
-        fields = ['id', 'profile_id', 'musictrack', 'date_time',]
+        fields = ['id',  'musictrack', 'date_time',]
         

@@ -3,6 +3,9 @@
 # Django
 from django.db import models
 
+# LaramusicAPI
+from laramusicAPI.models import MusicList
+
 # Utilities
 from utils.models import Lara_apiModel
 
@@ -36,8 +39,13 @@ class Profile(Lara_apiModel):
         help_text="User's reputation based on the continuos visits."
     )
 
+    musiclists = models.ManyToManyField(MusicList, through='MusicListInProfile')
+
     def __str__(self):
         """Return user's str representation."""
         return str(self.user)
 
+class MusicListInProfile(Lara_apiModel, models.Model):
+    musiclist = models.ForeignKey(MusicList, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
 

@@ -86,7 +86,7 @@ class UserSignUpSerializer(serializers.Serializer):
         """Handle user and profile creation."""
         validated_data.pop('password_confirmation')
         validated_profile = validated_data.pop('profile')
-
+        print(f'validated_profile {validated_profile}')
         user = User.objects.create_user(**validated_data, is_verified=True, is_client=True)
         profil = Profile.objects.create(user=user, **validated_profile)
         return user, profil
