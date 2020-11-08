@@ -31,15 +31,19 @@ class Album(Lara_apiModel, models.Model):
 
 
 class MusicTrack(Lara_apiModel, models.Model):
-    title = models.CharField(max_length=100)
-    uri = models.URLField(blank=True)
-    album = models.ForeignKey(Album, related_name='tracks', on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    fuente = models.CharField(max_length=100, blank=True)
+    track_uri = models.URLField()
+    image_uri = models.URLField(blank=True)
+    artist = models.CharField(max_length=200, blank=True)
+    album_uri = models.URLField(blank=True)
+    #album = models.ForeignKey(Album, related_name='tracks', on_delete=models.CASCADE)
     length = models.FloatField(
         default=0.0,
         help_text="track time in minutes."
     )
     views = models.PositiveIntegerField(default=0)
-    gender = models.CharField(max_length=2, blank=True)
+    gender = models.CharField(max_length=100, blank=True)
     song_year = models.PositiveIntegerField(default=0)
     record_company = models.CharField(max_length=100, blank=True)
     likes = models.PositiveIntegerField(default=0)
@@ -60,6 +64,8 @@ class MusicList(Lara_apiModel, models.Model):
     type_list = models.CharField(max_length=50, blank=True)
     musictracks = models.ManyToManyField(MusicTrack, through='TrackInList')
     
+    def __str__(self):
+        return '%d: %s %s' % (self.id, self.type_list, self.title)
 
 class TrackInList(Lara_apiModel, models.Model):
     musiclist = models.ForeignKey(MusicList, on_delete=models.CASCADE)
