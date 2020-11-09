@@ -14,9 +14,6 @@ from rest_framework.validators import UniqueValidator
 # Models
 from users.models import User, Profile
 
-# Tasks
-#from taskapp.tasks import send_confirmation_email
-
 # Serializers
 from users.serializers.profiles import ProfileModelSerializer
 
@@ -89,7 +86,7 @@ class UserSignUpSerializer(serializers.Serializer):
         print(f'validated_profile {validated_profile}')
         user = User.objects.create_user(**validated_data, is_verified=True, is_client=True)
         profil = Profile.objects.create(user=user, **validated_profile)
-        return user, profil
+        return user, profil,
 
 
 class UserLoginSerializer(serializers.Serializer):

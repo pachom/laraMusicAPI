@@ -26,6 +26,10 @@ from users.serializers import (
 from users.models import User
 #from laramusicAPI.models import Dia
 
+# LaramusciAPI
+from laramusicAPI.serializers import MusicListSerializer, MusicTrackSerializer
+from laramusicAPI.models import MusicList
+
 
 class UserViewSet(mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin,
@@ -70,6 +74,9 @@ class UserViewSet(mixins.RetrieveModelMixin,
         serializer = UserSignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user, profile = serializer.save()
+        newFavouriteList = MusicList(title='My', type_list='favourites')
+        newFavouriteList.save()
+        profile.musiclists.set([newFavouriteList,])
         data = UserModelSerializer(user).data
         
         return Response(data, status=status.HTTP_201_CREATED)
