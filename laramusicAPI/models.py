@@ -45,13 +45,14 @@ class MusicTrack(Lara_apiModel, models.Model):
     views = models.PositiveIntegerField(default=0)
     gender = models.CharField(max_length=100, blank=True)
     song_year = models.PositiveIntegerField(default=0)
-    record_company = models.CharField(max_length=100, blank=True)
+    song_id = models.CharField(max_length=100, blank=True)
     likes = models.PositiveIntegerField(default=0)
     order = models.IntegerField(default=1)
     tempo = models.IntegerField(default=0)
     time_sig = models.IntegerField(default=0)
     key_of = models.CharField(max_length=20, blank=True)
     camelot = models.CharField(max_length=20, blank=True) 
+    duration = models.CharField(max_length=20, blank=True)
 
     
     def __str__(self):
