@@ -40,10 +40,11 @@ class MusicTrackSerializer(serializers.ModelSerializer):
             'views',
             'gender',
             'song_year',
-            'record_company',
+            'song_id',
             'likes',
             'created',
             'modified',
+            'duration',
         ]
 
 
