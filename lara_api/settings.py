@@ -47,8 +47,6 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     'rest_framework',
-    #'rest_framework_jwt',
-    #'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'drf_yasg',
 ]
@@ -107,9 +105,9 @@ WSGI_APPLICATION = 'lara_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'laraAppDB',
-        'USER': 'postgres',
-        'PASSWORD': 'juanjo01',
+        'NAME': 'laraappdb',
+        "USER": os.getenv("DB_USER"),
+        'PASSWORD': '',
         'HOST': '127.0.0.1',
         'PORT': '5432'
     }
