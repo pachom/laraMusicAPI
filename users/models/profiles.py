@@ -7,10 +7,10 @@ from django.db import models
 from laramusicAPI.models import MusicList
 
 # Utilities
-from utils.models import Lara_apiModel
+from utils.models import LaraAPIModel
 
 
-class Profile(Lara_apiModel):
+class Profile(LaraAPIModel):
     """Profile model.
 
     A profile holds a user's public data like biography, picture,
@@ -45,7 +45,6 @@ class Profile(Lara_apiModel):
         """Return user's str representation."""
         return str(self.user)
 
-class MusicListInProfile(Lara_apiModel, models.Model):
+class MusicListInProfile(LaraAPIModel, models.Model):
     musiclist = models.ForeignKey(MusicList, on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-

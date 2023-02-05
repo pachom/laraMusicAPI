@@ -4,7 +4,7 @@
 from django.db import models
 
 
-class Lara_apiModel(models.Model):
+class LaraAPIModel(models.Model):
     """Share Lara_api base model.
 
     Lara_apiModel acts as an abstract base class from which every

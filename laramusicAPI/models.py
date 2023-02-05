@@ -5,22 +5,19 @@ from django.db import models
 from django.dispatch import receiver
 
 
-# Users
-#from users.models import Profile
-import users
 # Utils
-from utils.models import Lara_apiModel
+from utils.models import LaraAPIModel
 
 
 
-class Artist(Lara_apiModel, models.Model):
+class Artist(LaraAPIModel):
     name = models.CharField(max_length=100)
     fuente = models.CharField(max_length=100, blank=True) 
     fuente_id = models.CharField(max_length=100, blank=True) 
     fuente_uri = models.URLField(blank=True)
     fuente_img = models.URLField(blank=True)
 
-class Album(Lara_apiModel, models.Model):
+class Album(LaraAPIModel):
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
     album_title = models.CharField(max_length=100, blank=True)
     album_year= models.PositiveIntegerField(default=0)
@@ -30,7 +27,7 @@ class Album(Lara_apiModel, models.Model):
     )
 
 
-class MusicTrack(Lara_apiModel, models.Model):
+class MusicTrack(LaraAPIModel):
     title = models.CharField(max_length=200)
     fuente = models.CharField(max_length=100, blank=True)
     track_uri = models.URLField()
@@ -59,7 +56,7 @@ class MusicTrack(Lara_apiModel, models.Model):
         return '%d: %s' % (self.id, self.title)
 
 
-class MusicList(Lara_apiModel, models.Model):
+class MusicList(LaraAPIModel):
     #profile = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True)
     title = models.CharField(max_length=100, blank=True)
     type_list = models.CharField(max_length=50, blank=True)
@@ -68,19 +65,19 @@ class MusicList(Lara_apiModel, models.Model):
     def __str__(self):
         return '%d: %s %s' % (self.id, self.type_list, self.title)
 
-class TrackInList(Lara_apiModel, models.Model):
+class TrackInList(LaraAPIModel):
     musiclist = models.ForeignKey(MusicList, on_delete=models.CASCADE)
     musictrack = models.ForeignKey(MusicTrack, on_delete=models.CASCADE)
     visits = models.PositiveIntegerField(default=0)
 
 
-class TypeList(Lara_apiModel, models.Model):
+class TypeList(LaraAPIModel):
     name = models.CharField(max_length=10, primary_key=True)
 
     class Meta:
         ordering = ['name']
 
-class History(Lara_apiModel, models.Model):
+class History(LaraAPIModel):
     #profile_id = models.ForeignKey(users.models.Profile, on_delete=models.CASCADE)
     musictrack = models.ForeignKey(MusicTrack, on_delete=models.CASCADE, null=True)
     listened_uri = models.URLField(blank=True)

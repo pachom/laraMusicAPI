@@ -11,10 +11,10 @@ from django.core.validators import RegexValidator
 import users
 
 # Utilities
-from utils.models import Lara_apiModel
+from utils.models import LaraAPIModel
 
 
-class User(Lara_apiModel, AbstractUser):
+class User(LaraAPIModel, AbstractUser):
     """User model.
 
     Extend from Django's Abstract User, change the username field
