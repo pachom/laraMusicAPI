@@ -4,7 +4,7 @@ verify_ssl = true
 
 [packages]
 django = "*"
-djangorestframework = {version = "<3.12"}
+djangorestframework = "*"
 django-anymail = "*"
 django-cors-headers = "*"
 django-extensions = "*"
@@ -21,4 +21,4 @@ pillow = "*"
 whitenoise = "*"
 
 [requires]
-python_version = "3.8.5"
+python_version = "3.11.1"
